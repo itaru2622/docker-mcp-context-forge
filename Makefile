@@ -44,8 +44,8 @@ build:
 pull:
 	docker pull ${img}
 
-bash:
-	docker run --name ${cName} -it --rm -p ${PORT}:${PORT}          \
+start:
+	docker run --name ${cName} -it -d -p ${PORT}:${PORT}          \
 	-v ${wDir}/Makefile:/opt/mcp-context-forge/Makefile.mine        \
 	-e BASIC_AUTH_USER=${BASIC_AUTH_USER} -e BASIC_AUTH_PASSWORD=${BASIC_AUTH_PASSWORD}  -e PLATFORM_ADMIN_PASSWORD=${PLATFORM_ADMIN_PASSWORD} -e PLATFORM_ADMIN_EMAIL=${PLATFORM_ADMIN_EMAIL} \
 	-e PASSWORD_PREVENT_REUSE=${PASSWORD_PREVENT_REUSE} -e ADMIN_REQUIRE_PASSWORD_CHANGE_ON_BOOTSTRAP=${ADMIN_REQUIRE_PASSWORD_CHANGE_ON_BOOTSTRAP} -e DETECT_DEFAULT_PASSWORD_ON_LOGIN=${DETECT_DEFAULT_PASSWORD_ON_LOGIN} -e REQUIRE_PASSWORD_CHANGE_FOR_DEFAULT_PASSWORD=${REQUIRE_PASSWORD_CHANGE_FOR_DEFAULT_PASSWORD} -e PASSWORD_POLICY_ENABLED=${PASSWORD_POLICY_ENABLED} \
@@ -59,7 +59,11 @@ bash:
 	-e LOG_LEVEL=${LOG_LEVEL}                                       \
 	-e ENVIRONMENT=${ENVIRONMENT}                                   \
 	-e RELOAD=${RELOAD}                                             \
-	${img} /bin/bash
+	${img} tail -f /dev/null
 
+stop:
+	-docker rm -f -v ${cName}
+bash:
+	docker exec -it ${cName} /bin/bash
 run:
 	${cmd}
