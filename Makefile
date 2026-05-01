@@ -39,7 +39,7 @@ ENVIRONMENT ?=development            # Enables debug features
 cmd   ?=uvicorn mcpgateway.main:app --host 0.0.0.0 --port ${PORT} --reload
 
 build:
-	docker build -t ${img} .
+	docker build --build-arg base=${base} -t ${img} .
 
 bash:
 	docker run --name ${cName} -it --rm -p ${PORT}:${PORT}          \
